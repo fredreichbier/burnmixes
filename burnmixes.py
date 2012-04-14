@@ -150,19 +150,20 @@ if __name__ == '__main__':
     args.cd_length *= 1000 # s -> ms
 
     # generate the brasero project files
-    projects = build_projects(
+    projects = list(build_projects(
         args.filename,
         args.artist,
         args.track,
         args.label,
         args.part_length,
         args.cd_length
-    )
-    # write the project files
+    ))
+    # write all project files
     for idx, project in enumerate(projects, 1):
         filename = args.out % idx
         log.info('Writing %s ...' % (filename))
         project.write(filename, 'UTF-8', True)
-        # burn them?
-        if args.burn:
+    # burn them?
+    if args.burn:
+        for idx, project in enumerate(projects, 1):
             burn_project(filename, args.invoke)
